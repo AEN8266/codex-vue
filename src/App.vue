@@ -40,6 +40,10 @@ async function submit() {
     success.value = response.ok
     message.value = result.message || '请求失败，请稍后重试'
     if (response.ok && mode.value === 'register') switchMode('login')
+    if (response.ok && mode.value === 'login') {
+      sessionStorage.setItem('codex-vue-username', username.value.trim())
+      window.location.assign('/dashboard')
+    }
   } catch {
     success.value = false
     message.value = '无法连接服务，请确认 npm run dev 已启动'
@@ -61,6 +65,6 @@ async function submit() {
       <button class="submit" type="submit" :disabled="loading">{{ loading ? '处理中…' : mode === 'login' ? '登录' : '注册' }}</button>
     </form>
     <p v-if="message" class="message" :class="{ success }" role="status">{{ message }}</p>
-    <p class="hint">账号密码由本地服务加密后保存在 SQLite 数据库。</p>
+    <p class="hint">登录和注册请求将发送至后端服务。</p>
   </section></main>
 </template>
